@@ -1,0 +1,65 @@
+<html>
+  <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>배경 제거</title>
+    <style>
+            html {
+                position: relative;
+            }
+
+            html,
+            body {
+                padding: 0;
+                margin: 0;
+                font-family: Helvetica, Arial, sans-serif;
+            }
+
+            body,
+            [data-page="home"] {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .page {
+                animation: 1s fadeIn;
+            }
+            .error_label {
+                color: red;
+                animation: 1s fadeIn;
+            }
+            @keyframes fadeIn {
+                0% {
+                    opacity: 0;
+                }
+                100% {
+                    visibility: visible;
+                    opacity: 1;
+                }
+            }
+
+            .buttons {
+                display: grid;
+            }
+        </style>
+  </head>
+  <body class="body">
+      <div class="page" data-page="home">
+  <!--
+      <body>
+  	<div class="content">
+  -->
+		<br/><br/>
+		<h2>배경 제거</h2>
+		<form action="/common/upload.do" method="post" enctype="multipart/form-data">
+		    <input type="file" name="uploadFile" />
+		    <button type="submit">Upload</button>
+		</form>
+		<img src="{{ url_for('static', filename='images/in.jpg') }}"></img>
+		<img src="{{ url_for('static', filename='images/out.png') }}"></img>
+	</div>
+  </body>
+</html>
