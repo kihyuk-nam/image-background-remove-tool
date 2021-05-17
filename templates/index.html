@@ -54,12 +54,12 @@
   -->
 		<br/><br/>
 		<h2>배경 제거</h2>
-		<form action="/common/upload.do" method="post" enctype="multipart/form-data">
-		    <input type="file" name="uploadFile" />
+	        <form action="http://ec2-15-164-220-66.ap-northeast-2.compute.amazonaws.com:5000/background-remove" method="post" enctype="multipart/form-data">
+		    <input type="file" name="file" />
 		    <button type="submit">Upload</button>
 		</form>
-		<img src="{{ url_for('static', filename='images/in.jpg') }}"></img>
-		<img src="{{ url_for('static', filename='images/out.png') }}"></img>
+		<img src="{{ url_for('static', filename='images/20210517-before.jpg') }}"></img>
+		<img src="{{ url_for('static', filename='images/20210517-after.png') }}"></img>
 	</div>
   </body>
 </html>
