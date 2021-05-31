@@ -4,6 +4,8 @@
 from flask import Flask, render_template, request, jsonify
 import subprocess
 # for calling backend api
+import requests
+from requests.auth import HTTPBasicAuth
 import json
 from pathlib import Path
 
@@ -11,8 +13,8 @@ app = Flask(__name__)
 
 HOME_PATH = "/home/ubuntu/image-background-remove-tool/"
 FILE_DIR = "static/images/"
-FILE_INPUT = "20210528-before.jpg"
-FILE_OUTPUT = "20210528-after.png"
+FILE_INPUT = "IN-20210531.jpg"
+FILE_OUTPUT = "OUT-20210531.png"
 #FILE_PATH = "/home/ubuntu/image-background-remove-tool/static/images/"
 FILE_PATH = HOME_PATH + FILE_DIR
 FILE_OUTPUT_PATH = FILE_PATH + FILE_OUTPUT
@@ -22,7 +24,7 @@ URL_KEY = "/api/v0/files/key"
 URL_USER_IMAGE = "/api/v0/files/user_image/" # CAUTION!! if the '/' at the end is removed, error occures
 
 # Set Cookies: miri_access=xxxx
-COOKIE = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY2NvdW50X2lkIjo2MzYsImNzX21vZGUiOmZhbHNlLCJleHAiOjE2MjIxOTY4MDB9.HuMlKz7ZGj92eUC1yWp3I3Zlf8gvMlBY60Xgs3VGK_w'
+COOKIE = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY2NvdW50X2lkIjo2MzYsImNzX21vZGUiOmZhbHNlLCJleHAiOjE2MjI0NTI2MDd9.I-XlB8-uFPO5g5o6t6vDZZIczJWQzstCzgsZBzgWb8A'
 
 @app.route("/hello")
 def hello():
@@ -45,7 +47,8 @@ def background_remove():
             file.save(fileInput)
 
             # execute the remover
-            arg = HOME_PATH + "nam-run2.sh " + fileInput + " " + fileOutput + " u2netp rtb-bnb" 
+            arg = HOME_PATH + "run-remover.sh " + fileInput + " " + fileOutput + " u2netp rtb-bnb" 
+            print("Execute remove : " + arg)
             p = subprocess.Popen(arg, stdout=subprocess.PIPE, shell=True)
             #p.wait() # wait until the job finished
 
@@ -77,6 +80,7 @@ def background_remove():
 
             # 2. POST /api/v0/files/user_image
             # Upload file
+            p.wait() # wait until the job finished
             f = open(FILE_OUTPUT_PATH, 'rb')
             data  = {'key': uuid, 
                      'teamIdx': '518', 'teamScope': 'INDIVIDUAL', 'extraData': '{"width":960,"height":1280}'}
