@@ -1,28 +1,14 @@
 #web.py
 
-# for providing web interface
 from flask import Flask, render_template, request, jsonify
 import subprocess
-# for calling backend api
-import json
-from pathlib import Path
 
 app = Flask(__name__)
 
-HOME_PATH = "/home/ubuntu/image-background-remove-tool/"
-FILE_DIR = "static/images/"
 FILE_INPUT = "20210528-before.jpg"
 FILE_OUTPUT = "20210528-after.png"
-#FILE_PATH = "/home/ubuntu/image-background-remove-tool/static/images/"
-FILE_PATH = HOME_PATH + FILE_DIR
-FILE_OUTPUT_PATH = FILE_PATH + FILE_OUTPUT
-
-URL_HOME = "http://api-develop.miricanvas.com"
-URL_KEY = "/api/v0/files/key"
-URL_USER_IMAGE = "/api/v0/files/user_image/" # CAUTION!! if the '/' at the end is removed, error occures
-
-# Set Cookies: miri_access=xxxx
-COOKIE = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY2NvdW50X2lkIjo2MzYsImNzX21vZGUiOmZhbHNlLCJleHAiOjE2MjIxOTY4MDB9.HuMlKz7ZGj92eUC1yWp3I3Zlf8gvMlBY60Xgs3VGK_w'
+FILE_PATH = "/home/ubuntu/image-background-remove-tool/static/images/"
+HOME_PATH = "/home/ubuntu/image-background-remove-tool/"
 
 @app.route("/hello")
 def hello():
@@ -65,39 +51,12 @@ def background_remove():
 
             # TODO 
             # upload the result to S3 and return the id
-            # 0. set cookie value
-            cookies = dict(miri_access=COOKIE)
-
             # 1. POST /api/v0/files/key
-            #  - Get UUID for a image
-            resp = requests.post(URL_HOME+URL_KEY, cookies=cookies)
-            print(resp.text)
-            uuid = str(resp.json()["data"])
-            print(uuid)
 
             # 2. POST /api/v0/files/user_image
-            # Upload file
-            f = open(FILE_OUTPUT_PATH, 'rb')
-            data  = {'key': uuid, 
-                     'teamIdx': '518', 'teamScope': 'INDIVIDUAL', 'extraData': '{"width":960,"height":1280}'}
-            files = {"file": f}
-            resp = requests.post(URL_HOME+URL_USER_IMAGE, files=files, data=data, cookies=cookies)
-            print(resp.text)
-            print("status code " + str(resp.status_code))
-
-            if resp.status_code == 200:
-              print("Success")
-              data = json.loads(resp.text)
-              results = data['data']
-              file_key = results['fileKey']
-              file_url = results['originUrl']
-              print (file_key)
-              print (file_url)
-            else:
-              print ("Failure")
 
             # response
-            return jsonify({'file_id': uuid, 'status': 200})
+            return jsonify({'file_id': fileOutput, 'status': 200})
 
 #// 브라우저 캐시 끄기 : 매번 새 이미지 불러오도록
 @app.after_request
